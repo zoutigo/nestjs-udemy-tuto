@@ -38,7 +38,7 @@ export class AuthController {
     return this.userService.create({
       ...body,
       password: hashed,
-      role: { id: 4 },
+      role: { id: 1 },
     });
   }
 

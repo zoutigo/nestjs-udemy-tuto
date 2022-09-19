@@ -5,7 +5,7 @@ console.log('docker:', process.env.DOCKER);
 const dbPort =
   process.env.DOCKER === 'ENABLE'
     ? parseInt(process.env.DB_PORT_INT, 10) || 3306
-    : parseInt(process.env.DB_PORT_EXT, 10) || 33066;
+    : parseInt(process.env.DB_PORT_EXT, 10) || 33306;
 
 console.log('dbport:', dbPort);
 console.log('dbHost:', process.env.DB_HOST);

@@ -17,6 +17,7 @@ import * as bcrypt from 'bcrypt';
 import { UserCreateDto } from './dtos/user-create.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserUpdateDto } from './dtos/user-update.dto';
+import { PaginatedResultInterface } from 'src/common/interface/paginate-result.interface';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard)
@@ -28,8 +29,8 @@ export class UserController {
   //   return this.userService.all();
   // }
   @Get()
-  async all(@Query('page') page = 1): Promise<User[]> {
-    return this.userService.paginate(page);
+  async all(@Query('page') page = 1): Promise<PaginatedResultInterface> {
+    return this.userService.paginate(page, ['role']);
   }
 
   @Post()
@@ -46,7 +47,7 @@ export class UserController {
 
   @Get(':id')
   async get(@Param('id') id: number) {
-    return this.userService.findOne({ id });
+    return this.userService.findOne({ id }, ['role']);
   }
 
   @Put(':id')

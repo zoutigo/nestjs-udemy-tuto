@@ -1,7 +1,7 @@
 GET http://localhost:8000/api/users?page=1 HTTP/1.1
 
 ###
-GET http://localhost:8000/api/users/18 HTTP/1.1
+GET http://localhost:8000/api/users/3 HTTP/1.1
 
 ###
 
