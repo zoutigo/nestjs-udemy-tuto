@@ -11,13 +11,13 @@ Content-Type: application/json
 {
     "lastname": "mbele",
     "firstname":"valery",
-    "email":"admin1@test.com",
-    "roleId":2
+    "email":"gamer@test.com",
+    "roleId":1
 }
 
 ###
 
-PUT http://localhost:8000/api/users/21 HTTP/1.1
+PUT http://localhost:8000/api/users/7 HTTP/1.1
 Content-Type: application/json
 
 {
@@ -30,5 +30,21 @@ Content-Type: application/json
 DELETE http://localhost:8000/api/users/18 HTTP/1.1
 Content-Type: application/json
 
+###
+PUT http://localhost:8000/api/users/info HTTP/1.1
+Content-Type: application/json
+
+{
+    "lastname": "mebel"
+}
+###
+
+PUT http://localhost:8000/api/users/password HTTP/1.1
+Content-Type: application/json
+
+{
+    "password": "valery54",
+    "passwordConfirm": "valery54"
+}
 ###
 

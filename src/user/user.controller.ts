@@ -1,13 +1,16 @@
 import {
+  BadRequestException,
   Body,
   ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,12 +21,17 @@ import { UserCreateDto } from './dtos/user-create.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserUpdateDto } from './dtos/user-update.dto';
 import { PaginatedResultInterface } from 'src/common/interface/paginate-result.interface';
+import { AuthService } from 'src/auth/auth.service';
+import { Request } from 'express';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard)
 @Controller('users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+  ) {}
   // @Get()
   // async all() {
   //   return this.userService.all();
@@ -48,6 +56,28 @@ export class UserController {
   @Get(':id')
   async get(@Param('id') id: number) {
     return this.userService.findOne({ id }, ['role']);
+  }
+
+  @Put('info')
+  async updateInfo(@Body() body: UserUpdateDto, @Req() request: Request) {
+    const id = await this.authService.userId(request);
+    await this.userService.update(id, body);
+    return this.userService.findOne({ id });
+  }
+
+  @Put('password')
+  async updatePassword(
+    @Body('password') password: string,
+    @Body('passwordConfirm') passwordConfirm: string,
+    @Req() request: Request,
+  ) {
+    if (password !== passwordConfirm) {
+      throw new BadRequestException('les mots de pass doivent etre identiques');
+    }
+    const id = await this.authService.userId(request);
+    const hashedPassword = await bcrypt.hash(password, 12);
+    await this.userService.update(id, { password: hashedPassword });
+    return this.userService.findOne({ id });
   }
 
   @Put(':id')
