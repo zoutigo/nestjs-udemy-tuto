@@ -1,0 +1,68 @@
+GET http://localhost:8000/api/products?page=1 HTTP/1.1
+
+###
+GET http://localhost:8000/api/products/1 HTTP/1.1
+
+###
+
+POST http://localhost:8000/api/products HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "jasmin",
+    "description":"venue d'espagne",
+    "image":"bouquet de lavande",
+    "price":5
+}
+
+###
+
+PUT http://localhost:8000/api/products/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "la alavande",
+    "description":"fleur du mal",
+    "image":"image_lavande",
+    "price":20
+}
+###
+
+DELETE http://localhost:8000/api/products/2 HTTP/1.1
+Content-Type: application/json
+
+###
+
+POST http://localhost:8080/api/upload
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="steve.jpeg"
+Content-Type: image/jpeg
+
+< /home/zoutigo/Images/famille/steve.jpeg
+--boundary
+Content-Disposition: form-data; name="image"; filename="steve.jpeg"
+Content-Type: image/jpeg
+
+< /home/zoutigo/Images/famille/steve.jpeg
+--boundary--
+
+###
+POST http://localhost:8000/api/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="text"
+
+title
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="steve.jpeg"
+Content-Type: image/jpeg
+
+< /home/zoutigo/Images/famille/steve.jpeg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+###
+GET http://localhost:8000/api/uploads/39fd6c8352ab1866ee2f484fcd36afc10.jpeg HTTP/1.1
+
+###
