@@ -76,6 +76,11 @@ export class OrderController {
     return res.send(csv);
   }
 
+  @Get('chart')
+  async chart() {
+    return this.orderService.chart();
+  }
+
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.orderService.findOne(+id);
