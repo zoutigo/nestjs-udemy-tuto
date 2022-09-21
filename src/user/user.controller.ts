@@ -23,6 +23,7 @@ import { UserUpdateDto } from './dtos/user-update.dto';
 import { PaginatedResultInterface } from 'src/common/interface/paginate-result.interface';
 import { AuthService } from 'src/auth/auth.service';
 import { Request } from 'express';
+import { HasPermission } from 'src/permission/has-permission.decorator';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard)
@@ -37,11 +38,13 @@ export class UserController {
   //   return this.userService.all();
   // }
   @Get()
+  @HasPermission('users')
   async all(@Query('page') page = 1): Promise<PaginatedResultInterface> {
     return this.userService.paginate(page, ['role']);
   }
 
   @Post()
+  @HasPermission('users')
   async create(@Body() body: UserCreateDto): Promise<User> {
     const hashedPassword = await bcrypt.hash('1234', 12);
     const { roleId, ...rest } = body;
@@ -54,6 +57,7 @@ export class UserController {
   }
 
   @Get(':id')
+  @HasPermission('users')
   async get(@Param('id') id: number) {
     return this.userService.findOne({ id }, ['role']);
   }
@@ -81,6 +85,7 @@ export class UserController {
   }
 
   @Put(':id')
+  @HasPermission('users')
   async update(@Param('id') id: number, @Body() body: UserUpdateDto) {
     const { roleId, ...rest } = body;
     await this.userService.update(id, { ...rest, role: { id: roleId } });
@@ -88,6 +93,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @HasPermission('users')
   async delete(@Param('id') id: number): Promise<any> {
     return this.userService.delete(id);
   }

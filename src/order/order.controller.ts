@@ -20,6 +20,7 @@ import { Request, Response } from 'express';
 import { Parser } from 'json2csv';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
+import { HasPermission } from 'src/permission/has-permission.decorator';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard)
@@ -33,12 +34,14 @@ export class OrderController {
   // }
 
   @Get('orders')
+  @HasPermission('orders')
   findAll(@Query('page') page = 1) {
     return this.orderService.paginate(page, ['orderItems']);
     // return this.orderService.all(['orderItems']);
   }
 
   @Post('export')
+  @HasPermission('orders')
   async export(@Res() res: Response) {
     const parser = new Parser({
       fields: ['ID', 'Name', 'Email', 'Product Title', 'Price', 'Quantity'],
@@ -77,6 +80,7 @@ export class OrderController {
   }
 
   @Get('chart')
+  @HasPermission('orders')
   async chart() {
     return this.orderService.chart();
   }
