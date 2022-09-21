@@ -10,11 +10,16 @@ import {
   UseGuards,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Res,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Request, Response } from 'express';
+import { Parser } from 'json2csv';
+import { Order } from './entities/order.entity';
+import { OrderItem } from './entities/order-item.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard)
@@ -31,6 +36,44 @@ export class OrderController {
   findAll(@Query('page') page = 1) {
     return this.orderService.paginate(page, ['orderItems']);
     // return this.orderService.all(['orderItems']);
+  }
+
+  @Post('export')
+  async export(@Res() res: Response) {
+    const parser = new Parser({
+      fields: ['ID', 'Name', 'Email', 'Product Title', 'Price', 'Quantity'],
+    });
+
+    const orders = await this.orderService.all(['orderItems']);
+    const json = [];
+    orders.forEach((o: Order) => {
+      json.push({
+        ID: o.id,
+        Name: o.name,
+        Email: o.email,
+        'Product Title': '',
+        Price: '',
+        Quantity: '',
+      });
+
+      o.orderItems.forEach((i: OrderItem) => {
+        json.push({
+          ID: '',
+          Name: '',
+          Email: '',
+          'Product Title': i.productTitle,
+          Price: i.price,
+          Quantity: i.quantity,
+        });
+      });
+    });
+
+    const csv = parser.parse(json);
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment('orders.csv');
+
+    return res.send(csv);
   }
 
   // @Get(':id')
